@@ -5,7 +5,6 @@
  */
 
 module.exports = (config, {strapi}) => {
-  // Add your own logic here.
   return async (ctx, next) => {
     const method = ctx.request.method;
     const body = ctx.request.body;
@@ -23,7 +22,9 @@ module.exports = (config, {strapi}) => {
         accountId,
         {
           data: {
-            amount: type === "income" ? account.amount + amount : account.amount - amount
+            amount: type === "income"
+              ? account.amount + amount
+              : account.amount - amount
           }
         }
       );
