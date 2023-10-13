@@ -52,6 +52,29 @@ module.exports = (config, {strapi}) => {
       );
     }
 
+    if (method === 'PUT') {
+      const transactionId = ctx.params.id;
+      const { amount: newAmount, type: newType } = body.data;
+
+      const { account, amount: oldAmount, type: oldType } = await strapi.entityService.findOne(
+        'api::transaction.transaction',
+        transactionId,
+        {
+          populate: '*'
+        }
+      );
+
+      await strapi.entityService.update(
+        'api::account.account',
+        account.id,
+        {
+          data: {
+            amount: account.amount + ( oldType === "income" ? -oldAmount : oldAmount ) + (newType === "income" ? newAmount : -newAmount)
+          }
+        }
+      );
+    }
+
     await next();
   };
 };
